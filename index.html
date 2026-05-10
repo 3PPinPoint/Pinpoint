@@ -7,6 +7,17 @@
   <meta name="description" content="Η PinPoint βοηθάει τοπικές επιχειρήσεις να αυξήσουν την προβολή τους στο Google Maps μέσω Google Business Profile optimization." />
 
   <style>
+    .logo-img {
+  height: 48px;
+  width: auto;
+  display: block;
+}
+
+@media (max-width: 620px) {
+  .logo-img {
+    height: 40px;
+  }
+}
     :root {
       --bg: #ffffff;
       --text: #101010;
@@ -647,9 +658,8 @@
   <header>
     <div class="container nav">
       <a href="#" class="logo" aria-label="PinPoint Home">
-        <div class="logo-mark">P</div>
-        Pin<span>Point</span>
-      </a>
+  <img src="logo.png" alt="PinPoint logo" class="logo-img">
+</a>
 
       <nav class="nav-links" aria-label="Κύρια πλοήγηση">
         <a href="#services">Υπηρεσίες</a>
