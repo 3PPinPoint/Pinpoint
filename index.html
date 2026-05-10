@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PinPoint | Google Maps Visibility για Τοπικές Επιχειρήσεις</title>
+  <meta name="description" content="Η PinPoint βοηθάει τοπικές επιχειρήσεις να αυξήσουν την προβολή τους στο Google Maps μέσω Google Business Profile optimization." />
+
+  <style>
+    :root {
+      --bg: #ffffff;
+      --text: #101010;
+      --muted: #666666;
+      --light: #f7f8fa;
+      --border: #e8e8e8;
+      --accent: #2563eb;
+      --accent-dark: #1d4ed8;
+      --dark: #111827;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+
+    header {
+      padding: 20px 0;
+      border-bottom: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 24px;
+      font-weight: 850;
+      letter-spacing: -0.8px;
+    }
+
+    .logo-mark {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      background: var(--accent);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 17px;
+      font-weight: 900;
+    }
+
+    .logo span {
+      color: var(--accent);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 26px;
+      font-size: 15px;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .nav-links a:hover {
+      color: var(--text);
+    }
+
+    .nav-cta {
+      padding: 10px 16px;
+      border-radius: 999px;
+      background: var(--text);
+      color: #fff !important;
+    }
+
+    .hero {
+      padding: 105px 0 88px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      width: 560px;
+      height: 560px;
+      background: radial-gradient(circle, rgba(37, 99, 235, 0.13), transparent 62%);
+      top: -210px;
+      left: 50%;
+      transform: translateX(-50%);
+      pointer-events: none;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      background: #eef4ff;
+      color: var(--accent);
+      border: 1px solid #dbeafe;
+      border-radius: 999px;
+      font-size: 14px;
+      font-weight: 800;
+      margin-bottom: 22px;
+    }
+
+    .hero h1 {
+      font-size: clamp(42px, 7vw, 72px);
+      line-height: 1.05;
+      letter-spacing: -2.6px;
+      max-width: 930px;
+      margin: 0 auto 24px;
+    }
+
+    .hero p {
+      font-size: 20px;
+      color: var(--muted);
+      max-width: 740px;
+      margin: 0 auto 36px;
+    }
+
+    .hero-actions {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 52px;
+      padding: 14px 24px;
+      border-radius: 14px;
+      background: var(--accent);
+      color: #fff;
+      font-weight: 800;
+      transition: 0.2s ease;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+      box-shadow: 0 12px 24px rgba(37, 99, 235, 0.22);
+    }
+
+    .btn:hover {
+      background: var(--accent-dark);
+      transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+      background: #fff;
+      color: var(--text);
+      border: 1px solid var(--border);
+      box-shadow: none;
+    }
+
+    .btn-secondary:hover {
+      background: var(--light);
+      color: var(--text);
+    }
+
+    .trust-row {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 22px;
+      flex-wrap: wrap;
+      margin-top: 34px;
+      color: var(--muted);
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .trust-row span::before {
+      content: "✓";
+      color: var(--accent);
+      font-weight: 900;
+      margin-right: 7px;
+    }
+
+    section {
+      padding: 82px 0;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 52px;
+    }
+
+    .section-header h2 {
+      font-size: clamp(32px, 4vw, 42px);
+      letter-spacing: -1.3px;
+      margin-bottom: 12px;
+    }
+
+    .section-header p {
+      color: var(--muted);
+      font-size: 18px;
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    .light-section {
+      background: var(--light);
+    }
+
+    .problem-box {
+      max-width: 920px;
+      margin: 0 auto;
+      background: var(--dark);
+      color: #fff;
+      border-radius: 30px;
+      padding: 48px;
+      display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 36px;
+      align-items: center;
+    }
+
+    .problem-box h2 {
+      font-size: 38px;
+      line-height: 1.15;
+      letter-spacing: -1.2px;
+    }
+
+    .problem-box p {
+      color: #d1d5db;
+      font-size: 18px;
+      margin-bottom: 14px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 22px;
+    }
+
+    .card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 28px;
+      transition: 0.2s ease;
+      min-height: 250px;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 18px 42px rgba(15, 23, 42, 0.08);
+    }
+
+    .icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 13px;
+      background: #eef4ff;
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      margin-bottom: 18px;
+    }
+
+    .card h3 {
+      font-size: 20px;
+      margin-bottom: 10px;
+      letter-spacing: -0.4px;
+    }
+
+    .card p {
+      color: var(--muted);
+      font-size: 15.5px;
+    }
+
+    .why-wrapper {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 50px;
+      align-items: center;
+    }
+
+    .why-content h2 {
+      font-size: clamp(32px, 4vw, 42px);
+      line-height: 1.15;
+      letter-spacing: -1.3px;
+      margin-bottom: 20px;
+    }
+
+    .why-content p {
+      color: var(--muted);
+      font-size: 18px;
+      margin-bottom: 28px;
+    }
+
+    .check-list {
+      list-style: none;
+      display: grid;
+      gap: 16px;
+    }
+
+    .check-list li {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      font-size: 17px;
+      font-weight: 600;
+    }
+
+    .check-list span {
+      color: var(--accent);
+      font-weight: 900;
+    }
+
+    .stats-box {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      padding: 42px;
+      box-shadow: 0 18px 42px rgba(15, 23, 42, 0.07);
+    }
+
+    .stats-box .number {
+      font-size: 72px;
+      line-height: 1;
+      font-weight: 900;
+      color: var(--accent);
+      letter-spacing: -3px;
+      margin-bottom: 14px;
+    }
+
+    .stats-box h3 {
+      font-size: 24px;
+      margin-bottom: 12px;
+      letter-spacing: -0.6px;
+    }
+
+    .stats-box p {
+      color: var(--muted);
+      font-size: 17px;
+    }
+
+    .case-study {
+      max-width: 900px;
+      margin: 0 auto;
+      background: var(--dark);
+      color: #fff;
+      border-radius: 30px;
+      padding: 50px;
+      text-align: center;
+    }
+
+    .case-study .label {
+      color: #93c5fd;
+      font-weight: 900;
+      margin-bottom: 14px;
+      display: block;
+      text-transform: uppercase;
+      font-size: 13px;
+      letter-spacing: 1.2px;
+    }
+
+    .case-study h2 {
+      font-size: clamp(30px, 4vw, 42px);
+      line-height: 1.18;
+      letter-spacing: -1.2px;
+      margin-bottom: 16px;
+    }
+
+    .case-study p {
+      color: #d1d5db;
+      font-size: 18px;
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .step {
+      padding: 34px;
+      border-radius: 24px;
+      background: #fff;
+      border: 1px solid var(--border);
+      text-align: center;
+    }
+
+    .step-number {
+      width: 48px;
+      height: 48px;
+      background: var(--accent);
+      color: #fff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 18px;
+      font-weight: 900;
+    }
+
+    .step h3 {
+      font-size: 22px;
+      margin-bottom: 10px;
+    }
+
+    .step p {
+      color: var(--muted);
+    }
+
+    .pricing {
+      text-align: center;
+      max-width: 800px;
+      margin: 0 auto;
+      border: 1px solid var(--border);
+      border-radius: 30px;
+      padding: 50px;
+      background: #fff;
+      box-shadow: 0 18px 42px rgba(15, 23, 42, 0.06);
+    }
+
+    .pricing h2 {
+      font-size: clamp(32px, 4vw, 42px);
+      letter-spacing: -1.3px;
+      margin-bottom: 14px;
+    }
+
+    .pricing p {
+      color: var(--muted);
+      font-size: 18px;
+      margin-bottom: 28px;
+    }
+
+    .contact-wrapper {
+      display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 48px;
+      align-items: start;
+    }
+
+    .contact-info h2 {
+      font-size: clamp(32px, 4vw, 42px);
+      letter-spacing: -1.3px;
+      line-height: 1.16;
+      margin-bottom: 16px;
+    }
+
+    .contact-info p {
+      color: var(--muted);
+      font-size: 18px;
+      margin-bottom: 24px;
+    }
+
+    .contact-details {
+      display: grid;
+      gap: 12px;
+      color: var(--muted);
+      font-size: 16px;
+      padding: 22px;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      background: #fff;
+    }
+
+    .contact-details strong {
+      color: var(--text);
+    }
+
+    form {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 26px;
+      padding: 32px;
+      box-shadow: 0 18px 42px rgba(15, 23, 42, 0.06);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    label {
+      display: block;
+      font-weight: 800;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+
+    input,
+    textarea,
+    select {
+      width: 100%;
+      padding: 14px 15px;
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      font: inherit;
+      outline: none;
+      transition: 0.2s ease;
+      background: #fff;
+    }
+
+    input:focus,
+    textarea:focus,
+    select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+    }
+
+    textarea {
+      min-height: 130px;
+      resize: vertical;
+    }
+
+    .form-note {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 14px;
+    }
+
+    footer {
+      padding: 30px 0;
+      border-top: 1px solid var(--border);
+      text-align: center;
+      color: var(--muted);
+      font-size: 14px;
+      background: #fff;
+    }
+
+    @media (max-width: 980px) {
+      .nav-links {
+        display: none;
+      }
+
+      .grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .why-wrapper,
+      .contact-wrapper,
+      .problem-box {
+        grid-template-columns: 1fr;
+      }
+
+      .steps {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 620px) {
+      .container {
+        width: 92%;
+      }
+
+      .hero {
+        padding: 78px 0 64px;
+      }
+
+      .hero h1 {
+        letter-spacing: -1.7px;
+      }
+
+      .hero p {
+        font-size: 18px;
+      }
+
+      section {
+        padding: 62px 0;
+      }
+
+      .grid,
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+
+      .problem-box,
+      .case-study,
+      .pricing,
+      form,
+      .stats-box {
+        padding: 28px;
+      }
+
+      .hero-actions {
+        align-items: stretch;
+      }
+
+      .btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="container nav">
+      <a href="#" class="logo" aria-label="PinPoint Home">
+        <div class="logo-mark">P</div>
+        Pin<span>Point</span>
+      </a>
+
+      <nav class="nav-links" aria-label="Κύρια πλοήγηση">
+        <a href="#services">Υπηρεσίες</a>
+        <a href="#case-study">Στόχος</a>
+        <a href="#how">Πώς λειτουργεί</a>
+        <a href="#contact" class="nav-cta">Δωρεάν έλεγχος</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container hero-content">
+        <div class="badge">📍 Google Business Profile Optimization</div>
+        <h1>Κέρδισε περισσότερους πελάτες από το Google Maps.</h1>
+        <p>
+          Η PinPoint βοηθάει τοπικές επιχειρήσεις να βελτιώσουν την παρουσία τους σε Google Search και Google Maps, ώστε να εμφανίζονται πιο επαγγελματικά και να προσελκύουν περισσότερες επικοινωνίες.
+        </p>
+
+        <div class="hero-actions">
+          <a href="#contact" class="btn">Ζήτησε δωρεάν έλεγχο</a>
+          <a href="#services" class="btn btn-secondary">Δες τις υπηρεσίες</a>
+        </div>
+
+        <div class="trust-row">
+          <span>Για εστιατόρια, καφέ, ξενοδοχεία & επαγγελματίες</span>
+          <span>Απλή διαδικασία</span>
+          <span>Στόχος η μετρήσιμη ανάπτυξη</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="light-section">
+      <div class="container">
+        <div class="problem-box">
+          <h2>Οι πελάτες σε ψάχνουν ήδη στο Google.</h2>
+          <div>
+            <p>
+              Πριν επισκεφθούν μια επιχείρηση, οι περισσότεροι πελάτες ελέγχουν πρώτα το Google Maps: φωτογραφίες, ώρες λειτουργίας, κριτικές, τοποθεσία και συνολική εικόνα.
+            </p>
+            <p>
+              Αν το προφίλ σου είναι ελλιπές, παλιό ή χωρίς σωστή παρουσίαση, μπορεί να χάνεις πελάτες χωρίς καν να το γνωρίζεις.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="services">
+      <div class="container">
+        <div class="section-header">
+          <h2>Τι αναλαμβάνει η PinPoint</h2>
+          <p>
+            Πρακτικές υπηρεσίες για να δείχνει η επιχείρησή σου πιο αξιόπιστη, πιο ενεργή και πιο εύκολη να βρεθεί στο Google Maps.
+          </p>
+        </div>
+
+        <div class="grid">
+          <div class="card">
+            <div class="icon">01</div>
+            <h3>Google Business Profile Setup</h3>
+            <p>
+              Δημιουργία ή σωστή ρύθμιση του επαγγελματικού σου προφίλ με στοιχεία, κατηγορίες, υπηρεσίες, περιγραφή και φωτογραφίες.
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="icon">02</div>
+            <h3>Profile Optimization</h3>
+            <p>
+              Βελτίωση της δομής του προφίλ, των πληροφοριών, των φωτογραφιών και της συνολικής εικόνας που βλέπει ο πελάτης.
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="icon">03</div>
+            <h3>Monthly Management</h3>
+            <p>
+              Συνεχής ενημέρωση του προφίλ με αλλαγές, φωτογραφίες, posts και βασικές ενέργειες συντήρησης κάθε μήνα.
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="icon">04</div>
+            <h3>Review Management</h3>
+            <p>
+              Επαγγελματικές απαντήσεις σε αξιολογήσεις, καλύτερη εικόνα προς τους πελάτες και υποστήριξη στη διαχείριση φήμης.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="light-section" id="why">
+      <div class="container why-wrapper">
+        <div class="why-content">
+          <h2>Γιατί να επιλέξεις την PinPoint;</h2>
+          <p>
+            Η προσέγγισή μας είναι απλή: καθαρή εικόνα, σωστή πληροφορία, ενεργή παρουσία και σταδιακή βελτίωση της προβολής σου.
+          </p>
+
+          <ul class="check-list">
+            <li><span>✓</span> Εστίαση σε μικρές και τοπικές επιχειρήσεις</li>
+            <li><span>✓</span> Πρακτικές λύσεις χωρίς περιττή πολυπλοκότητα</li>
+            <li><span>✓</span> Επαγγελματική εικόνα σε Google Search και Maps</li>
+            <li><span>✓</span> Στόχος η αύξηση προβολής, κλήσεων και επισκέψεων</li>
+          </ul>
+        </div>
+
+        <div class="stats-box">
+          <div class="number">60%</div>
+          <h3>Αύξηση πελατείας σε τοπική επιχείρηση parking</h3>
+          <p>
+            Η βελτίωση και η συστηματική διαχείριση της παρουσίας της επιχείρησης στο Google συνέβαλε σε σημαντική αύξηση πελατών μέσα σε 24 μήνες.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section id="case-study">
+      <div class="container">
+        <div class="case-study">
+          <span class="label">Βάλε την επιχείρησή σου στον χάρτη</span>
+          <h2>Παρουσίασε την καλύτερη εκδοχή της επιχείρησής σου στο Google.</h2>
+          <p>
+            Βοηθάμε την επιχείρησή σου να εμφανίζεται πιο σωστά και πιο ολοκληρωμένα στο Google Maps και στις αναζητήσεις Google, ώστε οι νέοι πελάτες να σε βρίσκουν πιο εύκολα. Φροντίζουμε να παρουσιάζονται καθαρά όλες οι βασικές πληροφορίες που χρειάζεται ο καταναλωτής πριν σε επισκεφθεί: διεύθυνση, τηλέφωνο, ωράριο λειτουργίας, περιγραφή υπηρεσιών, φωτογραφίες, κριτικές και ό,τι άλλο ενισχύει την εικόνα και την αξιοπιστία σου.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section id="how" class="light-section">
+      <div class="container">
+        <div class="section-header">
+          <h2>Πώς λειτουργεί</h2>
+          <p>
+            Μια απλή διαδικασία τριών βημάτων για να δεις πού βρίσκεται σήμερα η επιχείρησή σου και τι μπορεί να βελτιωθεί.
+          </p>
+        </div>
+
+        <div class="steps">
+          <div class="step">
+            <div class="step-number">1</div>
+            <h3>Δωρεάν έλεγχος</h3>
+            <p>
+              Ελέγχουμε την τωρινή παρουσία της επιχείρησής σου στο Google Maps και εντοπίζουμε βασικά σημεία βελτίωσης.
+            </p>
+          </div>
+
+          <div class="step">
+            <div class="step-number">2</div>
+            <h3>Βελτιστοποίηση</h3>
+            <p>
+              Προτείνουμε και εφαρμόζουμε αλλαγές στο προφίλ σου, ώστε να δείχνει πιο ολοκληρωμένο και αξιόπιστο.
+            </p>
+          </div>
+
+          <div class="step">
+            <div class="step-number">3</div>
+            <h3>Ανάπτυξη</h3>
+            <p>
+              Παρακολουθούμε την εικόνα σου και βελτιώνουμε σταδιακά την παρουσία σου με στόχο περισσότερη προβολή και επικοινωνίες.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="pricing">
+      <div class="container">
+        <div class="pricing">
+          <h2>Πρόταση ανάλογα με τις ανάγκες σου</h2>
+          <p>
+            Κάθε επιχείρηση έχει διαφορετικό προφίλ, κλάδο και στόχους. Επικοινώνησε μαζί μας για να λάβεις εξατομικευμένη πρόταση ανάλογα με το τι χρειάζεται πραγματικά η επιχείρησή σου.
+          </p>
+          <a href="#contact" class="btn">Ζήτησε προσφορά</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact" class="light-section">
+      <div class="container contact-wrapper">
+        <div class="contact-info">
+          <h2>Ζήτησε δωρεάν έλεγχο της παρουσίας σου στο Google Maps.</h2>
+          <p>
+            Συμπλήρωσε τη φόρμα και θα επικοινωνήσουμε μαζί σου για να δούμε πώς εμφανίζεται σήμερα η επιχείρησή σου και τι μπορεί να βελτιωθεί.
+          </p>
+
+          <div class="contact-details">
+            <p><strong>Brand:</strong> PinPoint</p>
+            <p><strong>Email:</strong> 3p.pinpoint@gmail.com</p>
+            <p><strong>Phone:</strong> 6973727351</p>
+          </div>
+        </div>
+
+        <form name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+          <input type="hidden" name="form-name" value="contact" />
+          <p style="display:none;">
+            <label>Μην συμπληρώσετε αυτό το πεδίο: <input name="bot-field" /></label>
+          </p>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="name">Ονοματεπώνυμο</label>
+              <input type="text" id="name" name="Ονοματεπώνυμο" placeholder="π.χ. Γιώργος Παπαδόπουλος" required />
+            </div>
+
+            <div class="form-group">
+              <label for="business">Όνομα επιχείρησης</label>
+              <input type="text" id="business" name="Όνομα επιχείρησης" placeholder="π.χ. Coffee Spot" required />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input type="email" id="email" name="Email" placeholder="you@example.com" required />
+            </div>
+
+            <div class="form-group">
+              <label for="phone">Τηλέφωνο</label>
+              <input type="tel" id="phone" name="Τηλέφωνο" placeholder="π.χ. 69XXXXXXXX" required />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="category">Κλάδος επιχείρησης</label>
+            <select id="category" name="Κλάδος επιχείρησης" required>
+              <option value="">Επίλεξε κλάδο</option>
+              <option value="Εστίαση / Καφέ / Bar">Εστίαση / Καφέ / Bar</option>
+              <option value="Ξενοδοχείο / Κατάλυμα">Ξενοδοχείο / Κατάλυμα</option>
+              <option value="Parking / Χώρος στάθμευσης">Parking / Χώρος στάθμευσης</option>
+              <option value="Επαγγελματίας / Γραφείο">Επαγγελματίας / Γραφείο</option>
+              <option value="Υπηρεσίες / Τοπική επιχείρηση">Υπηρεσίες / Τοπική επιχείρηση</option>
+              <option value="Άλλο">Άλλο</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="maps-link">Google Maps link, αν υπάρχει</label>
+            <input type="url" id="maps-link" name="Google Maps link" placeholder="Βάλε εδώ το link του προφίλ σου" />
+          </div>
+
+          <div class="form-group">
+            <label for="message">Μήνυμα</label>
+            <textarea id="message" name="Μήνυμα" placeholder="Πες μας λίγα λόγια για την επιχείρησή σου και τι θα ήθελες να βελτιώσεις."></textarea>
+          </div>
+
+          <button type="submit" class="btn">Ζήτησε δωρεάν έλεγχο</button>
+          <p class="form-note">
+            Τα στοιχεία σου θα χρησιμοποιηθούν μόνο για να επικοινωνήσουμε μαζί σου σχετικά με το αίτημά σου.
+          </p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      © 2026 PinPoint. Google Business Profile optimization για τοπικές επιχειρήσεις.
+    </div>
+  </footer>
+</body>
+</html>
